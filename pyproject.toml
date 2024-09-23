@@ -1,0 +1,114 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools>=75.1.0",
+    "wheel>=0.44.0",
+]
+
+[project]
+name = "syngen"
+authors = [
+    {name = "", email = ""},
+]
+description = "A Synthetic data generator for Machine learning"
+readme = "README.md"
+requires-python = ">=3.8,<=3.12"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    'Development Status :: 1 - Planning',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Education',
+    'Intended Audience :: End Users/Desktop',
+    'Intended Audience :: Financial and Insurance Industry',
+    'Intended Audience :: Healthcare Industry',
+    'Intended Audience :: Science/Research',
+    'Intended Audience :: Telecommunications Industry',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: Implementation',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+    'Topic :: Software Development',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+]
+dynamic = [
+    "version",
+]
+dependencies = [
+    "pandas>=2.2.3",
+    "pydantic==2.9.2",
+    "pathlib>=1.0.1",
+]
+
+[project.license]
+file = "LICENSE.txt"
+
+#[project.urls]
+#Home = "https://github.com//"
+
+[project.optional-dependencies]
+dev = [
+    "twine",
+    "build",
+    "nguyenpanda>=0.1.9.7",
+    "pylint==2.17.7",
+    "mypy==1.4.1",
+    "jupyter>=1.1.1"
+]
+#doc = [
+#    "mkdocs>=1.6.0,<1.7.0",
+#    "mkdocs-material>=9.0.12,<10.0.0",
+#    "mkdocs-table-reader-plugin<=2.2.0",
+#    "mike>=2.1.1,<2.2.0",
+#    "mkdocstrings[python]>=0.20.0,<1.0.0",
+#    "mkdocs-badges"
+#]
+test = [
+    "pytest==8.3.3",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "bksdg.__version__" }
+
+[tool.setuptools.package-data]
+"*" = [
+    "VERSION",
+    "*.pyi",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["bksdg*"]
+
+#[tool.pytest.ini_options]
+#mccabe-complexity = 10
+#
+#[tool.pytest]
+#norecursedirs = "tests/helpers"
+#
+#[tool.pylint]
+#max-locals = 15
+#max-returns = 6
+#max-branches = 12
+#max-statements = 50
+#max-parents = 7
+#max-attributes = 7
+#min-public-methods = 2
+#max-public-methods = 20
+#max-module-lines = 1000
+#max-line-length = 120
+#disable = [
+#    "W0511", # fixme
+#    "W0311", # bad-indentation
+#    "C0330", # bad-continuation
+#    "R0903", # too-few-public-methods
+#]
+
+#[tool.coverage.run]
+#branch = true
+#source = ["src"]
+#omit = ["*/examples/*", "*setup.py", "*/build/*"]

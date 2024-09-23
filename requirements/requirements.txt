@@ -1,0 +1,3 @@
+pandas>=2.2.3
+pydantic==2.9.2
+pathlib>=1.0.1
