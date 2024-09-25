@@ -3,7 +3,7 @@ LATEX = pdflatex
 
 # Constant
 FILE = main
-CLEAN_FILES = $(FILE).pdf $(FILE).aux $(FILE).fdb_latexmk $(FILE).fls $(FILE).log $(FILE).out $(FILE).synctex.gz $(FILE).dvi
+CLEAN_FILES = $(FILE).aux $(FILE).fdb_latexmk $(FILE).fls $(FILE).log $(FILE).out $(FILE).synctex.gz $(FILE).dvi
 
 # Color
 RED = \033[1;91m
