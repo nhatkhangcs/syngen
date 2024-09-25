@@ -10,7 +10,7 @@ name = "syngen"
 authors = [
     {name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com"},
 ]
-description = "A Synthetic data generator for Machine learning"
+description = "Synthetic Data Generator for Machine Learning Pipelines"
 readme = "README.md"
 requires-python = ">=3.8,<=3.13"
 classifiers = [
