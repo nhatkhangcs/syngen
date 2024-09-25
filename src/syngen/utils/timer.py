@@ -1,5 +1,6 @@
 import time
 from typing import Callable, Literal
+from nguyenpanda.swan import color, yellow
 
 
 class PerformanceTimer:
@@ -16,7 +17,7 @@ class PerformanceTimer:
         else:
             raise NotImplementedError('')
 
-    def __enter__(self):
+    def __enter__(self) -> Callable[[], float]:
         self.start = self.timer()
         return lambda: self.result
 
@@ -39,11 +40,24 @@ def performance(unit: Literal['s', 'ms', 'ns'] = 'ms'):
     return wrapper_1
 
 
+def __time_consuming(n: int = 5, sleep: float = 0.2):
+    for i in range(1, n + 1, 1):
+        time.sleep(sleep)
+        yield i
+
+
+@performance(unit='s')
+def __a_trivial_function():
+    time.sleep(2)
+    return 'Hello, World!'
+
+
 if __name__ == '__main__':
-    @performance(unit='ms')
-    def __a_trivial_function():
-        time.sleep(2)
-        return 'Hello, World!'
+    print(color['m'] + 'Entering `__main__` function' + color.reset)
 
+    with PerformanceTimer(unit='s') as timer:
+        for each in __time_consuming():
+            print(f'\t {each}. sleep(0.2)')
+    print(yellow('Context manager:'), timer())
 
-    print(__a_trivial_function())
+    print(yellow('Decorator:'), __a_trivial_function())

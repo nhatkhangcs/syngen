@@ -1,5 +1,5 @@
 import pytest
-import src.syngen as syngen
+import syngen as syngen
 from nguyenpanda.swan import color, yellow
 
 import types
