@@ -1,0 +1,171 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{titlesec}
+
+% Custom colors for code listings
+\definecolor{lightgray}{RGB}{240, 240, 240}
+\definecolor{darkgray}{RGB}{90, 90, 90}
+\definecolor{darkgreen}{RGB}{0, 128, 0}
+
+% Code listing settings
+\lstset{
+    backgroundcolor=\color{lightgray},
+    keywordstyle=\bfseries,
+    commentstyle=\color{darkgray}\itshape,
+    stringstyle=\color{darkgreen},
+    basicstyle=\ttfamily\small,
+    frame=single,
+    showstringspaces=false,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    captionpos=b
+}
+
+% Document settings
+\geometry{margin=1in}
+\setlength{\headheight}{15pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{SynGen White Paper}
+\fancyhead[R]{\thepage}
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\title{\Huge \textbf{SynGen: Synthetic Data Generator for Machine Learning Pipelines}}
+\author{}
+\date{\today}
+
+% Add horizontal bar for style
+\newcommand{\horizbar}{
+    \vspace{1em}
+    \hrule height 1pt
+    \vspace{1em}
+}
+
+\begin{document}
+
+    \maketitle
+    \horizbar
+
+    \section*{Abstract}
+    As Machine Learning (ML) and Dataflow pipelines scale in complexity, the need for high-quality, varied, and condition-specific synthetic data becomes paramount. \textbf{SynGen}, an innovative data generation tool, provides developers and researchers with a flexible, high-performance solution for creating synthetic datasets. This paper details the technical requirements, functionality, and architecture of \texttt{SynGen}, along with key use cases and potential future enhancements.
+
+    \horizbar
+
+
+    \section{Introduction}
+    In modern ML workflows, the ability to simulate varied datasets helps ensure robustness and comprehensive testing of models. \texttt{SynGen}, a Python-based pip-installable package, addresses this need by allowing users to define dataset structures, specify data types, and enforce custom conditions on data generation.
+
+    \textbf{SynGen's} architecture is designed to scale with future data needs, offering a highly modular and extensible framework suitable for both research and enterprise use cases. In this white paper, we delve into the core functionalities, including attribute management, data type specification, conditional constraints, and CRUD operations.
+
+    \horizbar
+
+
+    \section{Functional Requirements}
+
+    \subsection{Core Features}
+    The \texttt{SynGen} package provides three primary features:
+    \begin{itemize}
+        \item \textbf{Attribute Naming}: Users define custom names for the attributes in their datasets.
+        \item \textbf{Data Types}: Support for common data types like integers, strings, floats, and more.
+        \item \textbf{Conditional Constraints}: Flexible conditions such as ranges for numerical attributes or regex patterns for string attributes.
+    \end{itemize}
+
+    \subsection{Sample Usage}
+    Below is a sample implementation using \texttt{SynGen}:
+
+    \begin{lstlisting}[language=Python, caption=Sample Usage of SynGen]
+import syngen
+
+attributes = ['name', 'age', 'email']
+datatypes = ['string', 'int', 'string']
+conditions = ['regex:^[A-Za-z]+$', 'range:18-60', 'regex:^.*@.*\\.com$']
+
+dataset = syngen.gen(attributes, datatypes, conditions)
+print(dataset)
+    \end{lstlisting}
+
+    \noindent\textbf{Expected Outcome}: A dataframe with attributes that adhere to the provided conditions, such as ages between 18-60 and valid email formats.
+
+    \horizbar
+
+
+    \section{APIs for CRUD Operations}
+    \texttt{SynGen} provides full CRUD functionality to manage synthetic datasets programmatically.
+
+    \subsection{Generate (Create)}
+    The \texttt{gen} function allows users to generate new synthetic data based on attribute names, data types, and conditions.
+
+    \begin{lstlisting}[language=Python, caption=API Example: Gen (Create)]
+dataset = syngen.gen(attributes, datatypes, conditions)
+    \end{lstlisting}
+
+    \subsection{Read}
+    Retrieve datasets based on specific filters or conditions.
+
+    \begin{lstlisting}[language=Python, caption=API Example: Read]
+filtered_dataset = syngen.read(filter_conditions)
+    \end{lstlisting}
+
+    \subsection{Update}
+    Update existing datasets, modifying attributes or conditions as required.
+
+    \begin{lstlisting}[language=Python, caption=API Example: Update]
+updated_dataset = syngen.update(dataset_id, new_conditions)
+    \end{lstlisting}
+
+    \subsection{Delete}
+    Delete datasets or specific records within datasets, with full control over the scope of deletion.
+
+    \begin{lstlisting}[language=Python, caption=API Example: Delete]
+syngen.delete(dataset_id)
+    \end{lstlisting}
+
+    \horizbar
+
+
+    \section{Non-Functional Requirements}
+
+    \subsection{Performance}
+    \texttt{SynGen} is optimized for speed and efficiency, ensuring high performance even when generating large datasets or applying complex conditions.
+
+    \subsection{Scalability}
+    The package is designed to scale with dataset size, attribute complexity, and advanced feature integration in the future.
+
+    \subsection{Extensibility}
+    The core architecture supports modularity, allowing for future enhancements such as multi-threaded data generation, distributed computing support, and integration with data validation pipelines.
+
+    \horizbar
+
+
+    \section{Use-cases}
+
+
+    \section{Design}
+
+    \subsection{Class diagram}
+
+    \subsection{Sequence diagram}
+
+
+    \section{Future Enhancements}
+    In future versions, \texttt{SynGen} will offer advanced features, such as:
+    \begin{itemize}
+        \item \textbf{AI-Powered Data Generation}: Integration with AI models like OpenAI for prompt-based data generation.
+        \item \textbf{Inter-attribute Dependencies}: Support for defining logical or statistical relationships between attributes.
+        \item \textbf{Interactive Dashboard}: A user-friendly interface for managing datasets and visualizing data constraints.
+    \end{itemize}
+
+    \horizbar
+
+
+    \section{Logs}
+
+
+\end{document}
