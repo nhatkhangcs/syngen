@@ -11,7 +11,7 @@ authors = [
     { name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com" },
     { name = "restingkiwi", email = "khoana2003@gmail.com" },
     { name = "trungcr7", email = "qtrung.tran2004@gmail.com" },
-    { name = "hieucr7", email = "ngoquochieu1211@gmail.com" },
+    { name = "hieubanh", email = "ngoquochieu1211@gmail.com" },
 #    { name = "", email = "" },
 #    { name = "", email = "" },
 ]
@@ -19,7 +19,7 @@ maintainers = [
     { name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com" },
     { name = "restingkiwi", email = "khoana2003@gmail.com" },
     { name = "trungcr7", email = "qtrung.tran2004@gmail.com" },
-    { name = "hieucr7", email = "ngoquochieu1211@gmail.com" },
+    { name = "hieubanh", email = "ngoquochieu1211@gmail.com" },
 ]
 description = "Synthetic Data Generator for Machine Learning Pipelines"
 readme = { file = "README.md", content-type = "text/markdown" }
