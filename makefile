@@ -43,7 +43,7 @@ check_env:	### Checking environment, e.g. script creating venv && operating syst
 
 venv:	### Create virtual environment
 	@echo "$(GREEN)Creating virtual environment$(RESET)"
-	$(ACTIVATE) && $(PYTHON) -m venv $(VENV_DIR_NAME)
+	$(PYTHON) -m venv $(VENV_DIR_NAME) && $(ACTIVATE)
 
 test: venv ### Runs all the project tests
 	@echo "$(GREEN)Run tests$(RESET)"
