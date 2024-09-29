@@ -25,6 +25,7 @@ endif
 latex:	### Compiling into PDF file `make latex FILE=<filename>` (default FILE=main)
 	@echo "$(GREEN)Compiling \`$(YELLOW)$(FILE).tex$(GREEN)\` into PDF$(RESET)"
 	$(LATEX) "$(FILE).tex"
+	make clean
 
 clean:	### Clean target to delete the unnecessary files `make clean FILE=<filename>` (default FILE=main)
 	@if [ -z "$(FILE)" ]; then \
