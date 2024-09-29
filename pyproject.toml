@@ -8,10 +8,21 @@ requires = [
 [project]
 name = "syngen"
 authors = [
-    {name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com"},
+    { name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com" },
+    { name = "restingkiwi", email = "khoana2003@gmail.com" },
+    { name = "trungcr7", email = "qtrung.tran2004@gmail.com" },
+    { name = "hieucr7", email = "ngoquochieu1211@gmail.com" },
+#    { name = "", email = "" },
+#    { name = "", email = "" },
+]
+maintainers = [
+    { name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com" },
+    { name = "restingkiwi", email = "khoana2003@gmail.com" },
+    { name = "trungcr7", email = "qtrung.tran2004@gmail.com" },
+    { name = "hieucr7", email = "ngoquochieu1211@gmail.com" },
 ]
 description = "Synthetic Data Generator for Machine Learning Pipelines"
-readme = "README.md"
+readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.8,<=3.13"
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -37,42 +48,22 @@ classifiers = [
 ]
 dynamic = [
     "version",
-]
-dependencies = [
-    "pandas>=2.2.3",
-    "pydantic==2.9.2",
-    "pathlib>=1.0.1",
+    "dependencies",
+    "optional-dependencies",
 ]
 
 [project.license]
 file = "LICENSE.txt"
 
-#[project.urls]
-#Home = "https://github.com//"
-
-[project.optional-dependencies]
-dev = [
-    "twine",
-    "build",
-    "nguyenpanda>=0.1.9.7",
-    "pylint==2.17.7",
-    "mypy==1.4.1",
-    "jupyter>=1.1.1"
-]
-#doc = [
-#    "mkdocs>=1.6.0,<1.7.0",
-#    "mkdocs-material>=9.0.12,<10.0.0",
-#    "mkdocs-table-reader-plugin<=2.2.0",
-#    "mike>=2.1.1,<2.2.0",
-#    "mkdocstrings[python]>=0.20.0,<1.0.0",
-#    "mkdocs-badges"
-#]
-test = [
-    "pytest==8.3.3",
-]
+[project.urls]
+Homepage = "https://github.com/nguyenpanda/syngen.git"
+Repository = "https://github.com/nguyenpanda/syngen.git"
 
 [tool.setuptools.dynamic]
 version = { attr = "syngen.__version__" }
+dependencies = { file = ["./requirements/requirements.txt"] }
+optional-dependencies.dev = { file = ["./requirements/requirements-dev.txt"] }
+optional-dependencies.test = { file = ["./requirements/requirements-test.txt"] }
 
 [tool.setuptools.package-data]
 "*" = [
@@ -83,6 +74,9 @@ version = { attr = "syngen.__version__" }
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["syngen*"]
+
+[project.scripts]
+syngen = "syngen.cli:main"
 
 #[tool.pytest.ini_options]
 #mccabe-complexity = 10
