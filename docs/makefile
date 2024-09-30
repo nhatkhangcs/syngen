@@ -17,7 +17,9 @@ help:	### The following lines will print the available commands when entering ju
 ifeq ($(UNAME_S), Linux)
 	@grep -P '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
-else # For MaxOS, Window (makesure Window has Subsystem Window for Linux)
+else ifeq ($(OS),Windows_NT)
+	@for /F "tokens=1,2 delims=:" %%A in ('findstr /R "^[a-zA-Z_-]*:.*###" $(MAKEFILE_LIST)') do @echo %%A: %%B
+else # For MaxOS
 	@awk -F ':.*###' '$$0 ~ FS {printf "%15s%s\n", $$1 ":", $$2}' \
 		$(MAKEFILE_LIST) | grep -v '@awk' | sort
 endif
@@ -28,9 +30,14 @@ latex:	### Compiling into PDF file `make latex FILE=<filename>` (default FILE=ma
 	make clean
 
 clean:	### Clean target to delete the unnecessary files `make clean FILE=<filename>` (default FILE=main)
+ifeq ($(OS),Windows_NT)
+	@del /Q $(CLEAN_FILES) 2>nul || echo No unnecessary files found; \
+	@echo $(GREEN)Unnecessary files for $(FILE) deleted. $(RESET)
+else
 	@if [ -z "$(FILE)" ]; then \
 		echo "$(RED)Error: FILE variable is not set. Use 'make clean FILE=<filename>'. $(RESET)"; \
 	else \
 		rm -f $(CLEAN_FILES); \
 		echo "$(GREEN)Unnecessary files for $(FILE) deleted. $(RESET)"; \
 	fi
+endif

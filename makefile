@@ -73,12 +73,7 @@ ifeq ($(UNAME_S), Linux)
 	@grep -P '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 else ifeq ($(UNAME_S), Windows_NT) # For Window
-	$(call cyan, "check_os   : Check the OS and venv settings")
-	$(call cyan, "clean      : Clean up files")
-	$(call cyan, "install    : Install dependencies")
-	$(call cyan, "install_dev: Install developer dependencies")
-	$(call cyan, "package    : Create package")
-	$(call cyan, "test       : Run tests")
+	@for /F "tokens=1,2 delims=:" %%A in ('findstr /R "^[a-zA-Z_-]*:.*###" $(MAKEFILE_LIST)') do @echo %%A: %%B
 else # For MaxOS
 	@awk -F ':.*###' '$$0 ~ FS {printf "\033[36m%15s\033[0m%s\n", $$1 ":", $$2}' \
 		$(MAKEFILE_LIST) | grep -v '@awk' | sort
