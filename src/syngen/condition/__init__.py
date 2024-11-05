@@ -1,6 +1,7 @@
 from .base import *
 from .distribution import (
     UniformDistribution,
+    Distribution,
     NormalDistribution,
     BinomialDistribution,
     PoissonDistribution,
@@ -11,6 +12,7 @@ from .distribution import (
 __all__ = [
     'BaseCondition',
     'Condition',
+    'Distribution',
     'UniformDistribution',
     'NormalDistribution',
     'BinomialDistribution',

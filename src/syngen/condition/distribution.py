@@ -94,12 +94,3 @@ class CustomDistribution(Distribution):
 
     def __call__(self, n_samples: int) -> np.ndarray:
         return np.random.choice(self.arr, size=n_samples, replace=True, p=self.weights)
-
-# __all__ = [
-#     'UniformDistribution',
-#     'NormalDistribution',
-#     'BinomialDistribution',
-#     'PoissonDistribution',
-#     'ExponentialDistribution',
-#     'CustomDistribution',
-# ]
