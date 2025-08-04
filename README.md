@@ -2,6 +2,29 @@
 
 A comprehensive Python library for generating synthetic data with various distributions, correlations, and constraints for machine learning and data science applications.
 
+[![PyPI version](https://badge.fury.io/py/synthetic-generator.svg)](https://badge.fury.io/py/synthetic-generator)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Why Synthetic Generator?](#-why-synthetic-generator)
+- [Quick Start](#-quick-start)
+- [Usage Examples](#-usage-examples)
+- [Data Types](#data-types)
+- [Distributions](#distributions)
+- [Correlations](#correlations)
+- [Constraints](#constraints)
+- [Dependencies](#dependencies)
+- [Advanced Features](#-advanced-features)
+- [Available Templates](#-available-templates)
+- [Package Information](#-package-information)
+- [Development](#️-development)
+- [What's New](#-whats-new-in-v013)
+- [Getting Started](#-getting-started)
+- [Contact](#-contact)
+
 ## 🌟 Features
 
 ### Core Data Generation
@@ -24,15 +47,25 @@ A comprehensive Python library for generating synthetic data with various distri
 - **Reproducibility**: Seed-based random generation for consistent results
 - **Performance**: Optimized for large-scale data generation
 
+## 🎯 Why Synthetic Generator?
+
+Synthetic Generator is designed to make synthetic data generation simple, flexible, and powerful. Whether you're:
+- **Testing applications** with realistic data
+- **Training machine learning models** with diverse datasets
+- **Prototyping** without sensitive information
+- **Data augmentation** for research purposes
+
+This library provides all the tools you need to create high-quality synthetic data that maintains the statistical properties of your original data while ensuring privacy and flexibility.
+
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
-# Install from PyPI
+# Install from PyPI (Recommended)
 pip install synthetic-generator
 
-# Install from GitHub
+# Install from GitHub (Development)
 git clone https://github.com/nguyenpanda/synthetic-generator.git
 cd synthetic-generator
 pip install -e .
@@ -241,6 +274,13 @@ export_data(data, 'parquet', filepath='data.parquet')
 - `medical_data`: Medical patient data with health metrics
 - `financial_data`: Financial transaction data
 
+## 📦 Package Information
+
+- **PyPI**: https://pypi.org/project/synthetic-generator/
+- **Version**: 0.1.3
+- **Python**: 3.8+
+- **Dependencies**: pandas, pydantic, numpy, scipy
+
 ## 🛠️ Development
 
 ### Installation for Development
@@ -278,6 +318,20 @@ make install_dev
 ## 📄 License
 
 Synthetic Generator is released under the MIT License. See [LICENSE.txt](LICENSE.txt) for details.
+
+## 🎯 What's New in v0.1.3
+
+- ✅ **Simplified Dependencies**: Removed problematic dependencies for better compatibility
+- ✅ **Fixed Installation Issues**: Resolved dependency conflicts
+- ✅ **Improved Documentation**: Updated examples and installation instructions
+- ✅ **PyPI Ready**: Successfully published to Python Package Index
+- ✅ **Cross-Platform**: Works on Windows, macOS, and Linux
+
+## 🚀 Getting Started
+
+For a quick start guide, see [QUICKSTART.md](QUICKSTART.md).
+
+For detailed examples, check the [examples/](examples/) directory.
 
 ## 📞 Contact
 
