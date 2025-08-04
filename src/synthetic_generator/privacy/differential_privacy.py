@@ -21,4 +21,4 @@ class DifferentialPrivacy:
         """Add Laplace noise for differential privacy."""
         scale = sensitivity / epsilon
         noise = np.random.laplace(0, scale, data.shape)
-        return data + noise 
+        return data + noise

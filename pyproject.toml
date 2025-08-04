@@ -8,18 +8,10 @@ requires = [
 [project]
 name = "synthetic-generator"
 authors = [
-    { name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com" },
-    { name = "restingkiwi", email = "khoana2003@gmail.com" },
-    { name = "trungcr7", email = "qtrung.tran2004@gmail.com" },
-    { name = "hieucr7", email = "ngoquochieu1211@gmail.com" },
-#    { name = "", email = "" },
-#    { name = "", email = "" },
+    { name = "Vo Hoang Nhat Khang", email = "nhatkhangdtp@gmail.com" },
 ]
 maintainers = [
-    { name = "nguyenpanda", email = "hatuongnguyen0107@gmail.com" },
-    { name = "restingkiwi", email = "khoana2003@gmail.com" },
-    { name = "trungcr7", email = "qtrung.tran2004@gmail.com" },
-    { name = "hieucr7", email = "ngoquochieu1211@gmail.com" },
+    { name = "Vo Hoang Nhat Khang", email = "nhatkhangdtp@gmail.com" },
 ]
 description = "Synthetic Data Generator for Machine Learning Pipelines"
 readme = { file = "README.md", content-type = "text/markdown" }
@@ -56,8 +48,8 @@ dynamic = [
 file = "LICENSE.txt"
 
 [project.urls]
-Homepage = "https://github.com/nguyenpanda/syngen.git"
-Repository = "https://github.com/nguyenpanda/syngen.git"
+Homepage = "https://github.com/nhatkhangcs/syngen.git"
+Repository = "https://github.com/nhatkhangcs/syngen.git"
 
 [tool.setuptools.dynamic]
 version = { attr = "synthetic_generator.__version__" }

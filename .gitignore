@@ -278,4 +278,5 @@ cython_debug/
 .DS_Store
 
 .pypirc
+api_key.txt
 playground
