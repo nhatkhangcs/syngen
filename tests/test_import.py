@@ -1,6 +1,5 @@
 import pytest
-import syngen as syngen
-from nguyenpanda.swan import color, yellow
+import synthetic_generator as synthetic_generator
 
 import types
 from typing import Set, Tuple, Type
@@ -19,17 +18,15 @@ def submodule_classes_info(module: types.ModuleType) -> Tuple[Set[str], Set[Type
             - A set of class objects (types) defined in the module.
     """
     name = module.__name__
-    classes, objects = syngen.utils.get_classes(module)
-    color.print(f'Module {name}', color='m', end=' - ')
-    color.print(f'Contains {len(classes)} classes', color='c')
+    classes, objects = synthetic_generator.utils.get_classes(module)
+    print(f'Module {name} - Contains {len(classes)} classes')
     for cls, obj in zip(classes, objects):
-        print('\t-> {: <30} : id = {}'.format(yellow(cls), hex(id(obj))))
+        print('\t-> {: <30} : id = {}'.format(cls, hex(id(obj))))
     return classes, objects
 
 
 if __name__ == '__main__':
-    print(color['g'] + f'`main` block at file' + color.reset, f'"{__file__}"')
+    print(f'`main` block at file "{__file__}"')
 
-    submodule_classes_info(syngen.attribute)
-    submodule_classes_info(syngen.condition)
-    submodule_classes_info(syngen.dtype)
+    submodule_classes_info(synthetic_generator.attribute)
+submodule_classes_info(synthetic_generator.dtype)

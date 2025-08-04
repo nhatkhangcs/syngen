@@ -1,6 +1,5 @@
 import time
 from typing import Callable, Literal
-from nguyenpanda.swan import color, yellow
 
 
 class PerformanceTimer:
@@ -144,13 +143,13 @@ def __a_trivial_function():
 
 
 if __name__ == '__main__':
-    print(color['m'] + 'Entering `__main__` function' + color.reset)
+    print('Entering `__main__` function')
 
     with PerformanceTimer(unit='s') as _timer:
         for each in __time_consuming():
             print(f'\t {each}. sleep(0.2)')
-    print(yellow('Context manager (s) :'), _timer())
-    print(yellow('Context manager (ms):'), _timer('ms'))
-    print(yellow('Context manager (ns):'), _timer.to('ns'))
+    print('Context manager (s) :', _timer())
+    print('Context manager (ms):', _timer('ms'))
+    print('Context manager (ns):', _timer.to('ns'))
 
-    print(yellow('Decorator:'), __a_trivial_function())
+    print('Decorator:', __a_trivial_function())

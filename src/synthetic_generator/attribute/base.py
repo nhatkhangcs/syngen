@@ -4,6 +4,7 @@ class BaseAttribute:
 
 
 class Attribute(BaseAttribute):
-    def __init__(self, name, dtype, condition=None):
+    def __init__(self, name, dtype):
         super().__init__()
-        pass
+        self.name = name
+        self.dtype = dtype

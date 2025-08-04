@@ -70,61 +70,85 @@
     \section{Functional Requirements}
 
     \subsection{Core Features}
-    The \texttt{SynGen} package provides three primary features:
+    The \texttt{SynGen} package provides comprehensive synthetic data generation features:
     \begin{itemize}
-        \item \textbf{Attribute Naming}: Users define custom names for the attributes in their datasets.
-        \item \textbf{Data Types}: Support for common data types like integers, strings, floats, and more.
-        \item \textbf{Conditional Constraints}: Flexible conditions such as ranges for numerical attributes or regex patterns for string attributes.
+        \item \textbf{Schema-based Generation}: Define data schemas with types, distributions, and constraints
+        \item \textbf{Multiple Data Types}: Support for integers, floats, strings, booleans, dates, emails, and more
+        \item \textbf{Statistical Distributions}: Normal, uniform, exponential, categorical, and other distributions
+        \item \textbf{Templates}: Pre-built schemas for common use cases
+        \item \textbf{Schema Inference}: Automatically detect schemas from existing data
     \end{itemize}
 
     \subsection{Sample Usage}
     Below is a sample implementation using \texttt{SynGen}:
 
     \begin{lstlisting}[language=Python, caption=Sample Usage of SynGen]
-import syngen
+from syngen import generate_data, DataSchema, ColumnSchema, DataType, DistributionType
 
-attributes = ['name', 'age', 'email']
-datatypes = ['string', 'int', 'string']
-conditions = ['regex:^[A-Za-z]+$', 'range:18-60', 'regex:^.*@.*\\.com$']
+# Define schema
+schema = DataSchema(
+    columns=[
+        ColumnSchema(
+            name="age",
+            data_type=DataType.INTEGER,
+            distribution=DistributionType.NORMAL,
+            parameters={"mean": 30, "std": 10},
+            min_value=18,
+            max_value=80
+        ),
+        ColumnSchema(
+            name="email",
+            data_type=DataType.EMAIL,
+            distribution=DistributionType.CATEGORICAL,
+            parameters={"categories": ["user@example.com", "admin@example.com"]}
+        )
+    ]
+)
 
-dataset = syngen.gen(attributes, datatypes, conditions)
+# Generate data
+dataset = generate_data(schema, n_samples=1000)
 print(dataset)
     \end{lstlisting}
 
-    \noindent\textbf{Expected Outcome}: A dataframe with attributes that adhere to the provided conditions, such as ages between 18-60 and valid email formats.
+    \noindent\textbf{Expected Outcome}: A dataframe with age values following a normal distribution between 18-80 and valid email addresses.
 
     \horizbar
 
 
-    \section{APIs for CRUD Operations}
-    \texttt{SynGen} provides full CRUD functionality to manage synthetic datasets programmatically.
+    \section{APIs for Data Generation}
+    \texttt{SynGen} provides comprehensive functionality to generate synthetic datasets programmatically.
 
-    \subsection{Generate (Create)}
-    The \texttt{gen} function allows users to generate new synthetic data based on attribute names, data types, and conditions.
+    \subsection{Generate Data}
+    The \texttt{generate\_data} function allows users to generate synthetic data based on schemas.
 
-    \begin{lstlisting}[language=Python, caption=API Example: Gen (Create)]
-dataset = syngen.gen(attributes, datatypes, conditions)
+    \begin{lstlisting}[language=Python, caption=API Example: Generate Data]
+dataset = generate_data(schema, n_samples=1000, seed=42)
     \end{lstlisting}
 
-    \subsection{Read}
-    Retrieve datasets based on specific filters or conditions.
+    \subsection{Load Templates}
+    Use pre-built templates for common use cases.
 
-    \begin{lstlisting}[language=Python, caption=API Example: Read]
-filtered_dataset = syngen.read(filter_conditions)
+    \begin{lstlisting}[language=Python, caption=API Example: Load Template]
+from syngen import load_template
+schema = load_template("customer_data")
+dataset = generate_data(schema, n_samples=500)
     \end{lstlisting}
 
-    \subsection{Update}
-    Update existing datasets, modifying attributes or conditions as required.
+    \subsection{Infer Schema}
+    Automatically detect data schema from existing data.
 
-    \begin{lstlisting}[language=Python, caption=API Example: Update]
-updated_dataset = syngen.update(dataset_id, new_conditions)
+    \begin{lstlisting}[language=Python, caption=API Example: Schema Inference]
+from syngen import infer_schema
+schema = infer_schema(existing_data)
+new_data = generate_data(schema, n_samples=1000)
     \end{lstlisting}
 
-    \subsection{Delete}
-    Delete datasets or specific records within datasets, with full control over the scope of deletion.
+    \subsection{Validate Data}
+    Validate generated data against schemas.
 
-    \begin{lstlisting}[language=Python, caption=API Example: Delete]
-syngen.delete(dataset_id)
+    \begin{lstlisting}[language=Python, caption=API Example: Data Validation]
+from syngen import validate_data
+results = validate_data(dataset, schema)
     \end{lstlisting}
 
     \horizbar
@@ -133,10 +157,10 @@ syngen.delete(dataset_id)
     \section{Non-Functional Requirements}
 
     \subsection{Performance}
-    \texttt{SynGen} is optimized for speed and efficiency, ensuring high performance even when generating large datasets or applying complex conditions.
+    \texttt{SynGen} is optimized for speed and efficiency, ensuring high performance even when generating large datasets with complex schemas.
 
     \subsection{Scalability}
-    The package is designed to scale with dataset size, attribute complexity, and advanced feature integration in the future.
+    The package is designed to scale with dataset size, schema complexity, and advanced feature integration in the future.
 
     \subsection{Extensibility}
     The core architecture supports modularity, allowing for future enhancements such as multi-threaded data generation, distributed computing support, and integration with data validation pipelines.
@@ -158,8 +182,8 @@ syngen.delete(dataset_id)
     In future versions, \texttt{SynGen} will offer advanced features, such as:
     \begin{itemize}
         \item \textbf{AI-Powered Data Generation}: Integration with AI models like OpenAI for prompt-based data generation.
-        \item \textbf{Inter-attribute Dependencies}: Support for defining logical or statistical relationships between attributes.
-        \item \textbf{Interactive Dashboard}: A user-friendly interface for managing datasets and visualizing data constraints.
+        \item \textbf{Advanced Correlations}: Support for complex statistical relationships between attributes.
+        \item \textbf{Interactive Dashboard}: A user-friendly interface for managing schemas and visualizing data constraints.
     \end{itemize}
 
     \horizbar
