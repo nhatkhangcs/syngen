@@ -301,7 +301,7 @@ export_data(data, 'parquet', filepath='data.parquet')
 ## 📦 Package Information
 
 - **PyPI**: https://pypi.org/project/synthetic-generator/
-- **Version**: 0.1.0
+- **Version**: 0.1.7
 - **Python**: 3.8+
 - **Dependencies**: pandas, pydantic, numpy, scipy
 
@@ -343,7 +343,7 @@ make install_dev
 
 Synthetic Generator is released under the MIT License. See [LICENSE.txt](LICENSE.txt) for details.
 
-## 🎯 What's New in v0.1.0
+## 🎯 What's New in v0.1.7
 
 - ✅ **Simplified Dependencies**: Removed problematic dependencies for better compatibility
 - ✅ **Fixed Installation Issues**: Resolved dependency conflicts
