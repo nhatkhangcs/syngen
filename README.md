@@ -44,7 +44,7 @@ A comprehensive Python library for generating synthetic data with various distri
   - [🤝 Contributing](#-contributing)
     - [Development Setup](#development-setup)
   - [📄 License](#-license)
-  - [🎯 What's New in v0.1.5](#-whats-new-in-v015)
+  - [🎯 What's New in v0.1.7](#-whats-new-in-v017)
   - [🚀 Getting Started](#-getting-started)
   - [📞 Contact](#-contact)
   - [🙏 Acknowledgments](#-acknowledgments)
