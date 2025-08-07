@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}Data Validation - Synthetic Generator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Data Validation
+            </h2>
+            <p class="lead text-muted">
+                Validate your generated data against schemas to ensure quality and compliance 
+                with your data requirements.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Validation Form -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-upload me-2"></i>Upload Data & Schema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label class="form-label">Data File</label>
+                        <div class="file-upload-area" id="dataUploadArea">
+                            <i class="fas fa-table fa-2x text-muted mb-2"></i>
+                            <h6>Upload your data file</h6>
+                            <small class="text-muted">CSV, JSON, Excel, Parquet</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Schema File (Optional)</label>
+                        <div class="file-upload-area" id="schemaUploadArea">
+                            <i class="fas fa-cogs fa-2x text-muted mb-2"></i>
+                            <h6>Upload schema file</h6>
+                            <small class="text-muted">JSON format</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="validationType" class="form-label">Validation Type</label>
+                        <select class="form-select" id="validationType">
+                            <option value="basic">Basic Validation</option>
+                            <option value="strict">Strict Validation</option>
+                            <option value="custom">Custom Rules</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn btn-success btn-lg w-100" id="validateBtn" disabled>
+                        <i class="fas fa-check-circle me-2"></i>Validate Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Validation Results
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="validationResults">
+                        <div class="text-center text-muted">
+                            <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                            <p>Upload data to see validation results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Summary -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="validationSummary">
+                        <div class="text-center text-muted">
+                            <i class="fas fa-list fa-2x mb-2"></i>
+                            <p>Validation summary will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let uploadedData = null;
+let uploadedSchema = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupFileUploads();
+    setupEventListeners();
+});
+
+function setupFileUploads() {
+    const dataUploadArea = document.getElementById('dataUploadArea');
+    const schemaUploadArea = document.getElementById('schemaUploadArea');
+    
+    fileHandler.setupDragAndDrop(dataUploadArea, function(file) {
+        handleDataUpload(file);
+    });
+    
+    fileHandler.setupDragAndDrop(schemaUploadArea, function(file) {
+        handleSchemaUpload(file);
+    });
+}
+
+function setupEventListeners() {
+    document.getElementById('validateBtn').addEventListener('click', validateData);
+}
+
+function handleDataUpload(file) {
+    try {
+        fileHandler.validateFile(file);
+        uploadedData = file;
+        
+        const uploadArea = document.getElementById('dataUploadArea');
+        uploadArea.innerHTML = `
+            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+            <h6>Data file uploaded</h6>
+            <small class="text-muted">${file.name}</small>
+        `;
+        
+        checkValidationReady();
+        utils.showNotification(`Data file "${file.name}" uploaded successfully!`, 'success');
+        
+    } catch (error) {
+        utils.showNotification(error.message, 'error');
+    }
+}
+
+function handleSchemaUpload(file) {
+    try {
+        if (!file.name.endsWith('.json')) {
+            throw new Error('Schema file must be in JSON format');
+        }
+        
+        uploadedSchema = file;
+        
+        const uploadArea = document.getElementById('schemaUploadArea');
+        uploadArea.innerHTML = `
+            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+            <h6>Schema file uploaded</h6>
+            <small class="text-muted">${file.name}</small>
+        `;
+        
+        checkValidationReady();
+        utils.showNotification(`Schema file "${file.name}" uploaded successfully!`, 'success');
+        
+    } catch (error) {
+        utils.showNotification(error.message, 'error');
+    }
+}
+
+function checkValidationReady() {
+    const validateBtn = document.getElementById('validateBtn');
+    validateBtn.disabled = !uploadedData;
+}
+
+function validateData() {
+    if (!uploadedData) {
+        utils.showNotification('Please upload a data file first', 'error');
+        return;
+    }
+    
+    const validationType = document.getElementById('validationType').value;
+    const resultsContainer = document.getElementById('validationResults');
+    const summaryContainer = document.getElementById('validationSummary');
+    
+    ui.showLoading(resultsContainer, 'Validating data...');
+    ui.showLoading(summaryContainer, 'Analyzing...');
+    
+    // Simulate validation process
+    setTimeout(() => {
+        const mockResults = generateMockValidationResults();
+        displayValidationResults(mockResults, resultsContainer);
+        displayValidationSummary(mockResults, summaryContainer);
+    }, 2000);
+}
+
+function generateMockValidationResults() {
+    return {
+        valid: Math.random() > 0.3, // 70% chance of being valid
+        total_checks: 15,
+        passed_checks: Math.floor(Math.random() * 15) + 10,
+        failed_checks: Math.floor(Math.random() * 5),
+        warnings: Math.floor(Math.random() * 3),
+        errors: [
+            {
+                type: 'data_type_mismatch',
+                column: 'age',
+                message: 'Expected integer, found float values',
+                severity: 'error'
+            },
+            {
+                type: 'missing_values',
+                column: 'email',
+                message: 'Found 5 missing email addresses',
+                severity: 'warning'
+            }
+        ],
+        statistics: {
+            total_rows: 1000,
+            total_columns: 8,
+            missing_values: 23,
+            duplicate_rows: 2,
+            data_quality_score: 0.92
+        }
+    };
+}
+
+function displayValidationResults(results, container) {
+    let html = `
+        <div class="mb-3">
+            <div class="d-flex align-items-center mb-2">
+                <h6 class="mb-0">Validation Status</h6>
+                <span class="badge ${results.valid ? 'bg-success' : 'bg-danger'} ms-2">
+                    ${results.valid ? 'Valid' : 'Invalid'}
+                </span>
+            </div>
+            <div class="progress mb-2">
+                <div class="progress-bar bg-success" style="width: ${(results.passed_checks / results.total_checks) * 100}%"></div>
+            </div>
+            <small class="text-muted">
+                ${results.passed_checks} of ${results.total_checks} checks passed
+            </small>
+        </div>
+    `;
+    
+    if (results.errors && results.errors.length > 0) {
+        html += '<h6>Issues Found</h6>';
+        results.errors.forEach(error => {
+            const badgeClass = error.severity === 'error' ? 'bg-danger' : 'bg-warning';
+            html += `
+                <div class="alert alert-${error.severity === 'error' ? 'danger' : 'warning'} py-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>${error.column}</strong>: ${error.message}
+                        </div>
+                        <span class="badge ${badgeClass}">${error.severity}</span>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        html += `
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>
+                No issues found! Your data is valid.
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+}
+
+function displayValidationSummary(results, container) {
+    const stats = results.statistics;
+    
+    let html = `
+        <div class="row text-center">
+            <div class="col-6">
+                <h4 class="text-primary">${stats.total_rows}</h4>
+                <small class="text-muted">Total Rows</small>
+            </div>
+            <div class="col-6">
+                <h4 class="text-primary">${stats.total_columns}</h4>
+                <small class="text-muted">Total Columns</small>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div class="row text-center">
+            <div class="col-6">
+                <h4 class="text-warning">${stats.missing_values}</h4>
+                <small class="text-muted">Missing Values</small>
+            </div>
+            <div class="col-6">
+                <h4 class="text-danger">${stats.duplicate_rows}</h4>
+                <small class="text-muted">Duplicate Rows</small>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div class="text-center">
+            <h4 class="text-success">${(stats.data_quality_score * 100).toFixed(1)}%</h4>
+            <small class="text-muted">Data Quality Score</small>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+</script>
+{% endblock %}

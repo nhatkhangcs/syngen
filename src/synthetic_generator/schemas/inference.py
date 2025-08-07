@@ -41,6 +41,12 @@ class SchemaInferrer:
             columns.append(column_schema)
         
         return DataSchema(columns=columns)
+
+
+def infer_schema_from_data(data: pd.DataFrame, sample_size: Optional[int] = None) -> DataSchema:
+    """Convenience function to infer schema from data."""
+    return SchemaInferrer.infer(data, sample_size)
+    
     
     @staticmethod
     def _infer_column_schema(column_name: str, column_data: pd.Series) -> ColumnSchema:

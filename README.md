@@ -67,6 +67,7 @@ A comprehensive Python library for generating synthetic data with various distri
 
 ### User Experience
 - **Easy-to-Use API**: Simple, intuitive interface for data generation
+- **Web Interface**: Modern, responsive web UI for interactive data generation
 - **Flexible Configuration**: Support for both programmatic and configuration-based setup
 - **Reproducibility**: Seed-based random generation for consistent results
 - **Performance**: Optimized for large-scale data generation
@@ -93,6 +94,18 @@ pip install synthetic-generator
 git clone https://github.com/nhatkhangcs/synthetic_generator.git
 cd synthetic-generator
 pip install -e .
+```
+
+### Web Interface
+
+```bash
+# Start the web UI
+synthetic-generator web
+
+# Or use the launcher script
+python run_web_ui.py
+
+# Access the web interface at: http://localhost:8000
 ```
 
 ### Basic Usage
@@ -255,6 +268,23 @@ Generate transaction data with realistic amounts, categories, and temporal patte
 Create order and product data with realistic relationships and business rules.
 
 ## 🔧 Advanced Features
+
+### Web Interface
+
+Synthetic Generator includes a modern web interface for interactive data generation:
+
+- **Interactive Schema Builder**: Drag-and-drop interface for creating data schemas
+- **Template Library**: Browse and use pre-built templates for common use cases
+- **Schema Inference**: Upload existing data to automatically infer schemas
+- **Real-time Preview**: See generated data instantly with live statistics
+- **Export Options**: Download data in multiple formats (CSV, JSON, Excel, Parquet)
+
+```bash
+# Start the web interface
+synthetic-generator web
+
+# Access at: http://localhost:8000
+```
 
 ### Privacy Settings
 

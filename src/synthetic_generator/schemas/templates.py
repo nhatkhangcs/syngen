@@ -302,4 +302,9 @@ class TemplateLoader:
             'medical_data': 'Medical patient data with health metrics and demographics',
             'financial_data': 'Financial transaction data with amounts and categories'
         }
-        return descriptions.get(template_name, 'No description available') 
+        return descriptions.get(template_name, 'No description available')
+
+
+def load_template_schema(template_name: str) -> DataSchema:
+    """Convenience function to load template schema."""
+    return TemplateLoader.load(template_name) 

@@ -279,4 +279,3 @@ cython_debug/
 
 .pypirc
 api_key.txt
-playground

@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Schema Inference - Synthetic Generator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">
+                <i class="fas fa-brain text-success me-2"></i>
+                Schema Inference
+            </h2>
+            <p class="lead text-muted">
+                Upload your existing data and let our AI automatically detect the data types, 
+                distributions, and constraints to create a schema for synthetic data generation.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Upload Section -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-upload me-2"></i>Upload Data
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="file-upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <h5>Drag & Drop your file here</h5>
+                        <p class="text-muted">or click to browse</p>
+                        <small class="text-muted">
+                            Supported formats: CSV, JSON, Excel (.xlsx), Parquet<br>
+                            Maximum file size: 16MB
+                        </small>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <label for="sampleSize" class="form-label">Sample Size for Inference</label>
+                        <input type="number" class="form-control" id="sampleSize" 
+                               value="1000" min="100" max="10000" 
+                               placeholder="Number of rows to use for inference">
+                        <small class="text-muted">Larger samples provide better inference but take longer</small>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-success btn-lg w-100" id="inferBtn" disabled>
+                            <i class="fas fa-brain me-2"></i>Infer Schema
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>Inferred Schema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="inferenceResults">
+                        <div class="text-center text-muted">
+                            <i class="fas fa-cogs fa-3x mb-3"></i>
+                            <p>Upload a file to see the inferred schema</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-magic me-2"></i>Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="actionButtons" style="display: none;">
+                        <button type="button" class="btn btn-primary btn-lg w-100 mb-2" id="useSchemaBtn">
+                            <i class="fas fa-magic me-2"></i>Use This Schema
+                        </button>
+                        <button type="button" class="btn btn-outline-primary w-100 mb-2" id="downloadSchemaBtn">
+                            <i class="fas fa-download me-2"></i>Download Schema (JSON)
+                        </button>
+                        <button type="button" class="btn btn-outline-success w-100" id="generateSampleBtn">
+                            <i class="fas fa-play me-2"></i>Generate Sample Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let uploadedFile = null;
+let inferredSchema = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupFileUpload();
+    setupEventListeners();
+});
+
+function setupFileUpload() {
+    const uploadArea = document.getElementById('uploadArea');
+    
+    fileHandler.setupDragAndDrop(uploadArea, function(file) {
+        handleFileUpload(file);
+    });
+}
+
+function setupEventListeners() {
+    document.getElementById('inferBtn').addEventListener('click', inferSchema);
+    document.getElementById('useSchemaBtn').addEventListener('click', useSchema);
+    document.getElementById('downloadSchemaBtn').addEventListener('click', downloadSchema);
+    document.getElementById('generateSampleBtn').addEventListener('click', generateSample);
+}
+
+function handleFileUpload(file) {
+    try {
+        fileHandler.validateFile(file);
+        uploadedFile = file;
+        
+        // Update UI
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.innerHTML = `
+            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+            <h5>File uploaded successfully!</h5>
+            <p class="text-muted">${file.name}</p>
+            <small class="text-muted">Size: ${utils.formatBytes(file.size)}</small>
+        `;
+        
+        document.getElementById('inferBtn').disabled = false;
+        
+        utils.showNotification(`File "${file.name}" uploaded successfully!`, 'success');
+        
+    } catch (error) {
+        utils.showNotification(error.message, 'error');
+    }
+}
+
+function inferSchema() {
+    if (!uploadedFile) {
+        utils.showNotification('Please upload a file first', 'error');
+        return;
+    }
+    
+    const sampleSize = parseInt(document.getElementById('sampleSize').value);
+    const resultsContainer = document.getElementById('inferenceResults');
+    
+    ui.showLoading(resultsContainer, 'Analyzing your data...');
+    
+    schemaInference.infer(uploadedFile, { sample_size: sampleSize })
+        .then(schema => {
+            inferredSchema = schema;
+            displayInferredSchema(schema, resultsContainer);
+            document.getElementById('actionButtons').style.display = 'block';
+            utils.showNotification('Schema inferred successfully!', 'success');
+        })
+        .catch(error => {
+            ui.showError(resultsContainer, error.message);
+            utils.showNotification(error.message, 'error');
+        });
+}
+
+function displayInferredSchema(schema, container) {
+    let html = `
+        <div class="mb-3">
+            <h6>Inferred Schema</h6>
+            <p class="text-muted">Detected ${schema.columns.length} columns</p>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Type</th>
+                        <th>Distribution</th>
+                        <th>Parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    schema.columns.forEach(column => {
+        const params = [];
+        if (column.parameters) {
+            Object.entries(column.parameters).forEach(([key, value]) => {
+                if (typeof value === 'number') {
+                    params.push(`${key}: ${value.toFixed(2)}`);
+                } else {
+                    params.push(`${key}: ${value}`);
+                }
+            });
+        }
+        
+        html += `
+            <tr>
+                <td><code>${column.name}</code></td>
+                <td><span class="badge bg-secondary">${column.data_type}</span></td>
+                <td><span class="badge bg-info">${column.distribution}</span></td>
+                <td><small>${params.join(', ') || 'Default'}</small></td>
+            </tr>
+        `;
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+function useSchema() {
+    if (!inferredSchema) {
+        utils.showNotification('No schema available', 'error');
+        return;
+    }
+    
+    // Store schema in sessionStorage and redirect to generator
+    sessionStorage.setItem('inferredSchema', JSON.stringify(inferredSchema));
+    window.location.href = '/generator?source=inference';
+}
+
+function downloadSchema() {
+    if (!inferredSchema) {
+        utils.showNotification('No schema available', 'error');
+        return;
+    }
+    
+    const filename = `inferred_schema_${new Date().toISOString().split('T')[0]}.json`;
+    const data = JSON.stringify(inferredSchema, null, 2);
+    
+    utils.downloadFile(data, filename, 'application/json');
+    utils.showNotification('Schema downloaded successfully!', 'success');
+}
+
+function generateSample() {
+    if (!inferredSchema) {
+        utils.showNotification('No schema available', 'error');
+        return;
+    }
+    
+    // Store schema and redirect to generator with sample generation
+    sessionStorage.setItem('inferredSchema', JSON.stringify(inferredSchema));
+    sessionStorage.setItem('generateSample', 'true');
+    window.location.href = '/generator?source=inference&sample=true';
+}
+</script>
+{% endblock %}

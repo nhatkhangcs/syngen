@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+
+{% block title %}Data Generator - Synthetic Generator{% endblock %}
+
+{% block extra_css %}
+<style>
+    .column-card {
+        transition: all 0.3s ease;
+    }
+    .column-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .parameter-group {
+        border-left: 3px solid #007bff;
+        padding-left: 15px;
+        margin-bottom: 15px;
+    }
+    .json-editor {
+        font-family: 'Courier New', monospace;
+        min-height: 200px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Panel - Schema Builder -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>Schema Builder
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Basic Settings -->
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">Generation Settings</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="nSamples" class="form-label">Number of Samples</label>
+                                <input type="number" class="form-control" id="nSamples" value="1000" min="1" max="100000">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="seed" class="form-label">Random Seed</label>
+                                <input type="number" class="form-control" id="seed" placeholder="Leave empty for random">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="privacyLevel" class="form-label">Privacy Level</label>
+                                <select class="form-select" id="privacyLevel">
+                                    <option value="">None</option>
+                                    <option value="basic">Basic</option>
+                                    <option value="differential">Differential Privacy</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="templateSelect" class="form-label">Load Template</label>
+                                <select class="form-select" id="templateSelect">
+                                    <option value="">Choose a template...</option>
+                                    <option value="customer_data">Customer Data</option>
+                                    <option value="medical_data">Medical Data</option>
+                                    <option value="financial_data">Financial Data</option>
+                                    <option value="ecommerce_data">E-commerce Data</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columns Management -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="text-muted mb-0">Columns</h6>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="addColumn()">
+                                <i class="fas fa-plus me-1"></i>Add Column
+                            </button>
+                        </div>
+                        <div id="columnsContainer">
+                            <!-- Columns will be added here dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-success btn-lg" onclick="generateData()">
+                            <i class="fas fa-magic me-2"></i>Generate Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Results -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2"></i>Generated Data
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="loadingIndicator" class="text-center d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Generating synthetic data...</p>
+                    </div>
+                    
+                    <div id="resultsContainer">
+                        <div class="text-center text-muted">
+                            <i class="fas fa-table fa-3x mb-3"></i>
+                            <p>Generated data will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Panel -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="statisticsContainer">
+                        <div class="text-center text-muted">
+                            <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                            <p>Statistics will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Column Template (Hidden) -->
+<template id="columnTemplate">
+    <div class="column-card card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Column <span class="column-number"></span></h6>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeColumn(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">Column Name</label>
+                    <input type="text" class="form-control column-name" placeholder="e.g., age, income">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Data Type</label>
+                    <select class="form-select data-type">
+                        <option value="INTEGER">Integer</option>
+                        <option value="FLOAT">Float</option>
+                        <option value="STRING">String</option>
+                        <option value="EMAIL">Email</option>
+                        <option value="PHONE">Phone</option>
+                        <option value="ADDRESS">Address</option>
+                        <option value="NAME">Name</option>
+                        <option value="CATEGORICAL">Categorical</option>
+                        <option value="BOOLEAN">Boolean</option>
+                        <option value="DATE">Date</option>
+                        <option value="DATETIME">DateTime</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <label class="form-label">Distribution</label>
+                    <select class="form-select distribution-type">
+                        <option value="NORMAL">Normal</option>
+                        <option value="UNIFORM">Uniform</option>
+                        <option value="EXPONENTIAL">Exponential</option>
+                        <option value="GAMMA">Gamma</option>
+                        <option value="BETA">Beta</option>
+                        <option value="WEIBULL">Weibull</option>
+                        <option value="POISSON">Poisson</option>
+                        <option value="BINOMIAL">Binomial</option>
+                        <option value="GEOMETRIC">Geometric</option>
+                        <option value="CATEGORICAL">Categorical</option>
+                        <option value="CONSTANT">Constant</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Unique Values</label>
+                    <div class="form-check">
+                        <input class="form-check-input unique-check" type="checkbox">
+                        <label class="form-check-label">Require unique values</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameters Section -->
+            <div class="parameters-section mt-3">
+                <h6 class="text-muted">Parameters</h6>
+                <div class="parameter-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Min Value</label>
+                            <input type="number" class="form-control min-value" placeholder="Optional">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Max Value</label>
+                            <input type="number" class="form-control max-value" placeholder="Optional">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label">Mean</label>
+                            <input type="number" class="form-control mean-value" placeholder="For normal distribution">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Standard Deviation</label>
+                            <input type="number" class="form-control std-value" placeholder="For normal distribution">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let columnCounter = 0;
+let templatesLoaded = false;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    addColumn(); // Add first column by default
+    loadTemplates();
+});
+
+function addColumn() {
+    columnCounter++;
+    const template = document.getElementById('columnTemplate');
+    const clone = template.content.cloneNode(true);
+    
+    // Update column number
+    clone.querySelector('.column-number').textContent = columnCounter;
+    
+    // Add to container
+    document.getElementById('columnsContainer').appendChild(clone);
+}
+
+function removeColumn(button) {
+    button.closest('.column-card').remove();
+}
+
+function loadTemplates() {
+    // Prevent multiple calls
+    if (templatesLoaded) return;
+    
+    fetch('/api/templates')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const select = document.getElementById('templateSelect');
+                // Clear existing options except the first one
+                while (select.children.length > 1) {
+                    select.removeChild(select.lastChild);
+                }
+                // Add new options
+                data.templates.forEach(template => {
+                    const option = document.createElement('option');
+                    option.value = template.name;
+                    option.textContent = template.display_name;
+                    select.appendChild(option);
+                });
+                templatesLoaded = true;
+            }
+        })
+        .catch(error => console.error('Error loading templates:', error));
+}
+
+function generateData() {
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const resultsContainer = document.getElementById('resultsContainer');
+    
+    // Show loading
+    loadingIndicator.classList.remove('d-none');
+    resultsContainer.innerHTML = '';
+    
+    // Build schema from form
+    const schema = buildSchema();
+    
+    // Prepare request data
+    const requestData = {
+        schema: schema,
+        n_samples: parseInt(document.getElementById('nSamples').value),
+        seed: document.getElementById('seed').value || null,
+        privacy_level: document.getElementById('privacyLevel').value || null
+    };
+    
+    // Make API call
+    fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadingIndicator.classList.add('d-none');
+        
+        if (data.success) {
+            displayResults(data);
+            getStatistics(data.data);
+        } else {
+            showError(data.error);
+        }
+    })
+    .catch(error => {
+        loadingIndicator.classList.add('d-none');
+        showError('Failed to generate data: ' + error.message);
+    });
+}
+
+function buildSchema() {
+    const columns = [];
+    const columnCards = document.querySelectorAll('.column-card');
+    
+    columnCards.forEach(card => {
+        const column = {
+            name: card.querySelector('.column-name').value,
+            data_type: card.querySelector('.data-type').value,
+            distribution: card.querySelector('.distribution-type').value,
+            parameters: {},
+            unique: card.querySelector('.unique-check').checked,
+            min_value: card.querySelector('.min-value').value || null,
+            max_value: card.querySelector('.max-value').value || null
+        };
+        
+        // Add distribution-specific parameters
+        if (column.distribution === 'NORMAL') {
+            const mean = card.querySelector('.mean-value').value;
+            const std = card.querySelector('.std-value').value;
+            if (mean) column.parameters.mean = parseFloat(mean);
+            if (std) column.parameters.std = parseFloat(std);
+        }
+        
+        columns.push(column);
+    });
+    
+    return { columns: columns };
+}
+
+function displayResults(data) {
+    const container = document.getElementById('resultsContainer');
+    
+    // Create table
+    let html = `
+        <div class="mb-3">
+            <h6>Generated ${data.sample_size} samples</h6>
+            <p class="text-muted">Shape: ${data.shape[0]} rows × ${data.shape[1]} columns</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        ${data.columns.map(col => `<th>${col}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    // Add first 10 rows
+    data.data.slice(0, 10).forEach(row => {
+        html += '<tr>';
+        data.columns.forEach(col => {
+            html += `<td>${row[col] || ''}</td>`;
+        });
+        html += '</tr>';
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-primary btn-sm" onclick="exportData('csv')">
+                <i class="fas fa-download me-1"></i>Export CSV
+            </button>
+            <button class="btn btn-info btn-sm ms-2" onclick="exportData('json')">
+                <i class="fas fa-download me-1"></i>Export JSON
+            </button>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+function getStatistics(data) {
+    fetch('/api/statistics', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: data })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayStatistics(data.statistics);
+        }
+    })
+    .catch(error => console.error('Error getting statistics:', error));
+}
+
+function displayStatistics(stats) {
+    const container = document.getElementById('statisticsContainer');
+    
+    let html = `
+        <div class="row">
+            <div class="col-6">
+                <small class="text-muted">Rows</small>
+                <h6>${stats.shape[0]}</h6>
+            </div>
+            <div class="col-6">
+                <small class="text-muted">Columns</small>
+                <h6>${stats.shape[1]}</h6>
+            </div>
+        </div>
+    `;
+    
+    if (Object.keys(stats.numeric_stats).length > 0) {
+        html += '<hr><h6>Numeric Statistics</h6>';
+        Object.keys(stats.numeric_stats).forEach(col => {
+            const colStats = stats.numeric_stats[col];
+            html += `
+                <div class="mb-2">
+                    <small class="text-muted">${col}</small>
+                    <div>Mean: ${colStats.mean?.toFixed(2) || 'N/A'}</div>
+                    <div>Std: ${colStats.std?.toFixed(2) || 'N/A'}</div>
+                </div>
+            `;
+        });
+    }
+    
+    container.innerHTML = html;
+}
+
+function showError(message) {
+    const container = document.getElementById('resultsContainer');
+    container.innerHTML = `
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            ${message}
+        </div>
+    `;
+}
+
+function exportData(format) {
+    // Implementation for data export
+    console.log('Exporting data in', format, 'format');
+}
+
+// Template loading
+document.getElementById('templateSelect').addEventListener('change', function() {
+    const templateName = this.value;
+    if (templateName) {
+        loadTemplate(templateName);
+    }
+});
+
+function loadTemplate(templateName) {
+    fetch(`/api/templates/${templateName}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                applyTemplate(data.schema);
+            }
+        })
+        .catch(error => console.error('Error loading template:', error));
+}
+
+function applyTemplate(schema) {
+    // Clear existing columns
+    document.getElementById('columnsContainer').innerHTML = '';
+    columnCounter = 0;
+    
+    // Add columns from template
+    schema.columns.forEach(column => {
+        addColumn();
+        const lastCard = document.querySelector('.column-card:last-child');
+        
+        // Fill in the values
+        lastCard.querySelector('.column-name').value = column.name;
+        lastCard.querySelector('.data-type').value = column.data_type;
+        lastCard.querySelector('.distribution-type').value = column.distribution;
+        
+        if (column.min_value) lastCard.querySelector('.min-value').value = column.min_value;
+        if (column.max_value) lastCard.querySelector('.max-value').value = column.max_value;
+        if (column.unique) lastCard.querySelector('.unique-check').checked = true;
+        
+        // Fill parameters
+        if (column.parameters) {
+            if (column.parameters.mean) lastCard.querySelector('.mean-value').value = column.parameters.mean;
+            if (column.parameters.std) lastCard.querySelector('.std-value').value = column.parameters.std;
+        }
+    });
+}
+</script>
+{% endblock %}
