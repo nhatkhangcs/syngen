@@ -288,7 +288,7 @@ synthetic-generator web
 # Access at: http://localhost:8000
 ```
 
-![Web Interface](branding/UI/UI.png)
+![Web Interface](branding/UI/UI_new.png)
 
 ![Templates](branding/UI/templates.png)
 
