@@ -12,11 +12,12 @@ A comprehensive Python library for generating synthetic data with various distri
   - [📋 Table of Contents](#-table-of-contents)
   - [🌟 Features](#-features)
     - [Core Data Generation](#core-data-generation)
-    - [Advanced Features](#advanced-features)
+    - [Main Features](#main-features)
     - [User Experience](#user-experience)
   - [🎯 Why Synthetic Generator?](#-why-synthetic-generator)
   - [🚀 Quick Start](#-quick-start)
     - [Installation](#installation)
+    - [Web Interface](#web-interface)
     - [Basic Usage](#basic-usage)
     - [Using Templates](#using-templates)
     - [Schema Inference](#schema-inference)
@@ -32,6 +33,7 @@ A comprehensive Python library for generating synthetic data with various distri
     - [Financial Data](#financial-data)
     - [E-commerce Data](#e-commerce-data)
   - [🔧 Advanced Features](#-advanced-features)
+    - [Web Interface](#web-interface-1)
     - [Privacy Settings](#privacy-settings)
     - [Data Validation](#data-validation)
     - [Data Export](#data-export)
@@ -58,7 +60,7 @@ A comprehensive Python library for generating synthetic data with various distri
 - **Constraints**: Value ranges, uniqueness, null probabilities, pattern matching
 - **Dependencies**: Generate data based on other columns with conditional rules
 
-### Advanced Features
+### Main Features
 - **Schema Inference**: Automatically detect data types and distributions from existing data
 - **Templates**: Pre-built schemas for common use cases (customer data, medical data, e-commerce, financial)
 - **Privacy**: Basic anonymization and differential privacy support
@@ -285,6 +287,12 @@ synthetic-generator web
 
 # Access at: http://localhost:8000
 ```
+
+![Web Interface](branding/UI/UI.png)
+
+![Templates](branding/UI/templates.png)
+
+![Schema Inference](branding/UI/schema.png)
 
 ### Privacy Settings
 
