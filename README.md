@@ -17,8 +17,8 @@ A comprehensive Python library for generating synthetic data with various distri
   - [🎯 Why Synthetic Generator?](#-why-synthetic-generator)
   - [🚀 Quick Start](#-quick-start)
     - [Installation](#installation)
-    - [Web Interface](#web-interface)
-    - [Basic Usage](#basic-usage)
+    - [Quick Generate (CLI)](#quick-generate-cli)
+    - [Quick API (Python)](#quick-api-python)
     - [Using Templates](#using-templates)
     - [Schema Inference](#schema-inference)
   - [📚 Detailed Documentation](#-detailed-documentation)
@@ -33,7 +33,7 @@ A comprehensive Python library for generating synthetic data with various distri
     - [Financial Data](#financial-data)
     - [E-commerce Data](#e-commerce-data)
   - [🔧 Advanced Features](#-advanced-features)
-    - [Web Interface](#web-interface-1)
+    - [Optional Web Interface](#optional-web-interface)
     - [Privacy Settings](#privacy-settings)
     - [Data Validation](#data-validation)
     - [Data Export](#data-export)
@@ -46,7 +46,7 @@ A comprehensive Python library for generating synthetic data with various distri
   - [🤝 Contributing](#-contributing)
     - [Development Setup](#development-setup)
   - [📄 License](#-license)
-  - [🎯 What's New in v0.1.7](#-whats-new-in-v017)
+  - [🎯 What's New in v0.1.8](#-whats-new-in-v018)
   - [🚀 Getting Started](#-getting-started)
   - [📞 Contact](#-contact)
   - [🙏 Acknowledgments](#-acknowledgments)
@@ -300,7 +300,7 @@ export_data(data, 'parquet', filepath='data.parquet')
 ## 📦 Package Information
 
 - **PyPI**: https://pypi.org/project/synthetic-generator/
-- **Version**: 0.1.7
+- **Version**: 0.1.8
 - **Python**: 3.8+
 - **Dependencies**: pandas, pydantic, numpy, scipy
 
@@ -342,7 +342,7 @@ make install_dev
 
 Synthetic Generator is released under the MIT License. See [LICENSE.txt](LICENSE.txt) for details.
 
-## 🎯 What's New in v0.1.7
+## 🎯 What's New in v0.1.8
 
 - ✅ **Simplified Dependencies**: Removed problematic dependencies for better compatibility
 - ✅ **Fixed Installation Issues**: Resolved dependency conflicts
