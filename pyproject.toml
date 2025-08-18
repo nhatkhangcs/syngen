@@ -56,6 +56,7 @@ version = { attr = "synthetic_generator.__version__" }
 dependencies = { file = ["./requirements/requirements.txt"] }
 optional-dependencies.dev = { file = ["./requirements/requirements-dev.txt"] }
 optional-dependencies.test = { file = ["./requirements/requirements-test.txt"] }
+optional-dependencies.web = { file = ["./requirements/requirements-web.txt"] }
 
 [tool.setuptools.package-data]
 "*" = [

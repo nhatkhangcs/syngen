@@ -98,58 +98,27 @@ cd synthetic-generator
 pip install -e .
 ```
 
-### Web Interface
+### Quick Generate (CLI)
 
 ```bash
-# Start the web UI
-synthetic-generator web
+# From a built-in template
+synthetic-generator generate --template customer_data --rows 10000 --out customers.parquet
 
-# Or use the launcher script
-python run_web_ui.py
-
-# Access the web interface at: http://localhost:8000
+# From your real data (fit then sample)
+synthetic-generator generate --in real.csv --rows 5000 --out synthetic.csv
 ```
 
-### Basic Usage
+### Quick API (Python)
 
 ```python
-import pandas as pd
-from synthetic_generator import generate_data, DataSchema, ColumnSchema, DataType, DistributionType
+from synthetic_generator.quick import dataset, fit
 
-# Define a simple schema
-schema = DataSchema(
-    columns=[
-        ColumnSchema(
-            name="age",
-            data_type=DataType.INTEGER,
-            distribution=DistributionType.NORMAL,
-            parameters={"mean": 30, "std": 10},
-            min_value=18,
-            max_value=80
-        ),
-        ColumnSchema(
-            name="income",
-            data_type=DataType.FLOAT,
-            distribution=DistributionType.NORMAL,
-            parameters={"mean": 50000, "std": 20000},
-            min_value=20000,
-            max_value=200000
-        ),
-        ColumnSchema(
-            name="city",
-            data_type=DataType.CATEGORICAL,
-            distribution=DistributionType.CATEGORICAL,
-            parameters={
-                "categories": ["New York", "Los Angeles", "Chicago", "Houston"],
-                "probabilities": [0.3, 0.25, 0.25, 0.2]
-            }
-        )
-    ]
-)
+# 1) From a template
+df = dataset(template="customer_data", rows=1000, seed=42)
 
-# Generate data
-data = generate_data(schema, n_samples=1000, seed=42)
-print(data.head())
+# 2) From your data (fit then sample)
+model = fit("your_data.csv")
+df2 = model.sample(5000, seed=123)
 ```
 
 ### Using Templates
@@ -271,21 +240,13 @@ Create order and product data with realistic relationships and business rules.
 
 ## 🔧 Advanced Features
 
-### Web Interface
+### Optional Web Interface
 
-Synthetic Generator includes a modern web interface for interactive data generation:
-
-- **Interactive Schema Builder**: Drag-and-drop interface for creating data schemas
-- **Template Library**: Browse and use pre-built templates for common use cases
-- **Schema Inference**: Upload existing data to automatically infer schemas
-- **Real-time Preview**: See generated data instantly with live statistics
-- **Export Options**: Download data in multiple formats (CSV, JSON, Excel, Parquet)
+You can install and run the web UI if needed:
 
 ```bash
-# Start the web interface
-synthetic-generator web
-
-# Access at: http://localhost:8000
+pip install synthetic-generator[web]
+synthetic-generator web  # http://localhost:8000
 ```
 
 ![Web Interface](branding/UI/UI_new.png)
