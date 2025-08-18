@@ -46,7 +46,7 @@ A comprehensive Python library for generating synthetic data with various distri
   - [🤝 Contributing](#-contributing)
     - [Development Setup](#development-setup)
   - [📄 License](#-license)
-  - [🎯 What's New in v0.1.9](#-whats-new-in-v019)
+  - [🎯 What's New in v0.0.1](#-whats-new-in-v001)
   - [🚀 Getting Started](#-getting-started)
   - [📞 Contact](#-contact)
   - [🙏 Acknowledgments](#-acknowledgments)
@@ -300,7 +300,7 @@ export_data(data, 'parquet', filepath='data.parquet')
 ## 📦 Package Information
 
 - **PyPI**: https://pypi.org/project/synthetic-generator/
-- **Version**: 0.1.9
+- **Version**: 0.0.1
 - **Python**: 3.8+
 - **Dependencies**: pandas, pydantic, numpy, scipy
 
@@ -342,7 +342,7 @@ make install_dev
 
 Synthetic Generator is released under the MIT License. See [LICENSE.txt](LICENSE.txt) for details.
 
-## 🎯 What's New in v0.1.9
+## 🎯 What's New in v0.0.1
 
 - ✅ **Simplified Dependencies**: Removed problematic dependencies for better compatibility
 - ✅ **Fixed Installation Issues**: Resolved dependency conflicts

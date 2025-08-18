@@ -36,7 +36,7 @@ __all__ = [
     'DistributionType'
 ]
 
-__version__ = '0.1.9'
+__version__ = '0.0.1'
 
 def generate_data(
     schema: Union[Dict[str, Any], 'schemas.DataSchema'],
